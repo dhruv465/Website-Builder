@@ -1,0 +1,507 @@
+{
+  "info": {
+    "name": "Smart Website Builder API",
+    "description": "Complete API collection for Smart Website Builder",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "session_id",
+      "value": "{{$guid}}",
+      "type": "string"
+    },
+    {
+      "key": "site_id",
+      "value": "{{$guid}}",
+      "type": "string"
+    },
+    {
+      "key": "workflow_id",
+      "value": "{{$guid}}",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "Root",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": ["{{base_url}}"],
+              "path": [""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Requirements",
+      "item": [
+        {
+          "name": "Parse Requirements",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"raw_input\": \"I want a portfolio website with a dark theme and contact form\",\n  \"input_type\": \"text\",\n  \"session_id\": \"{{session_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/requirements/parse",
+              "host": ["{{base_url}}"],
+              "path": ["api", "requirements", "parse"]
+            }
+          }
+        },
+        {
+          "name": "Clarify Requirements",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"session_id\": \"{{session_id}}\",\n  \"user_response\": \"I want to showcase web development projects\",\n  \"previous_requirements\": {\n    \"site_type\": \"portfolio\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/requirements/clarify",
+              "host": ["{{base_url}}"],
+              "path": ["api", "requirements", "clarify"]
+            }
+          }
+        },
+        {
+          "name": "Get Conversation History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/requirements/conversation/{{session_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "requirements", "conversation", "{{session_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Code Generation",
+      "item": [
+        {
+          "name": "Generate Code",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"requirements\": {\n    \"site_type\": \"portfolio\",\n    \"pages\": [\"home\", \"projects\", \"contact\"],\n    \"color_palette\": \"dark\",\n    \"key_features\": [\"project showcase\", \"contact form\"]\n  },\n  \"session_id\": \"{{session_id}}\",\n  \"async_processing\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/code/generate",
+              "host": ["{{base_url}}"],
+              "path": ["api", "code", "generate"]
+            }
+          }
+        },
+        {
+          "name": "Modify Code",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"existing_code\": \"<!DOCTYPE html><html>...</html>\",\n  \"modifications\": [\n    \"Add a testimonials section\",\n    \"Change color scheme to blue\"\n  ],\n  \"requirements\": {\n    \"site_type\": \"portfolio\"\n  },\n  \"session_id\": \"{{session_id}}\",\n  \"async_processing\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/code/modify",
+              "host": ["{{base_url}}"],
+              "path": ["api", "code", "modify"]
+            }
+          }
+        },
+        {
+          "name": "List Templates",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/code/templates",
+              "host": ["{{base_url}}"],
+              "path": ["api", "code", "templates"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Audit",
+      "item": [
+        {
+          "name": "Run Audit",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"html_code\": \"<!DOCTYPE html><html>...</html>\",\n  \"site_id\": \"{{site_id}}\",\n  \"session_id\": \"{{session_id}}\",\n  \"async_processing\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/audit/run",
+              "host": ["{{base_url}}"],
+              "path": ["api", "audit", "run"]
+            }
+          }
+        },
+        {
+          "name": "Get Audit History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/audit/history/{{site_id}}?limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "audit", "history", "{{site_id}}"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Audit Trends",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/audit/trends/{{site_id}}?days=30",
+              "host": ["{{base_url}}"],
+              "path": ["api", "audit", "trends", "{{site_id}}"],
+              "query": [
+                {
+                  "key": "days",
+                  "value": "30"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Deployment",
+      "item": [
+        {
+          "name": "Deploy Site",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"html_code\": \"<!DOCTYPE html><html>...</html>\",\n  \"site_name\": \"my-portfolio\",\n  \"site_id\": \"{{site_id}}\",\n  \"session_id\": \"{{session_id}}\",\n  \"environment\": \"production\",\n  \"async_processing\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/deploy/deploy",
+              "host": ["{{base_url}}"],
+              "path": ["api", "deploy", "deploy"]
+            }
+          }
+        },
+        {
+          "name": "Get Deployment History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/deploy/history/{{site_id}}?limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["api", "deploy", "history", "{{site_id}}"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sessions",
+      "item": [
+        {
+          "name": "Create Session",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"preferences\": {\n    \"default_color_scheme\": \"dark\",\n    \"default_site_type\": \"portfolio\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/sessions",
+              "host": ["{{base_url}}"],
+              "path": ["api", "sessions"]
+            }
+          }
+        },
+        {
+          "name": "Get Session",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/sessions/{{session_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "sessions", "{{session_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Session",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"preferences\": {\n    \"default_color_scheme\": \"light\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/sessions/{{session_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "sessions", "{{session_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Site Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/sessions/sites/{{site_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "sessions", "sites", "{{site_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Export Session",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"session_id\": \"{{session_id}}\",\n  \"include_sites\": true,\n  \"compress\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/sessions/export",
+              "host": ["{{base_url}}"],
+              "path": ["api", "sessions", "export"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Integrations",
+      "item": [
+        {
+          "name": "Add Integration",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"integration_type\": \"payment\",\n  \"provider\": \"stripe\",\n  \"config\": {\n    \"product_name\": \"Premium Plan\",\n    \"price\": \"99.99\",\n    \"currency\": \"usd\"\n  },\n  \"session_id\": \"{{session_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/integrations/add",
+              "host": ["{{base_url}}"],
+              "path": ["api", "integrations", "add"]
+            }
+          }
+        },
+        {
+          "name": "List Available Integrations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/integrations/available",
+              "host": ["{{base_url}}"],
+              "path": ["api", "integrations", "available"]
+            }
+          }
+        },
+        {
+          "name": "Validate Integration",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"integration_type\": \"payment\",\n  \"provider\": \"stripe\",\n  \"code\": {\n    \"html_snippet\": \"<div>...</div>\"\n  },\n  \"session_id\": \"{{session_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/integrations/validate",
+              "host": ["{{base_url}}"],
+              "path": ["api", "integrations", "validate"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Improvement",
+      "item": [
+        {
+          "name": "Start Improvement",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"html_code\": \"<!DOCTYPE html><html>...</html>\",\n  \"session_id\": \"{{session_id}}\",\n  \"max_cycles\": 2,\n  \"async_mode\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/improve/start",
+              "host": ["{{base_url}}"],
+              "path": ["api", "improve", "start"]
+            }
+          }
+        },
+        {
+          "name": "Get Improvement Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/improve/status/{{workflow_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "improve", "status", "{{workflow_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Check Thresholds",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"audit_result\": {\n    \"overall_score\": 85,\n    \"seo_score\": 85,\n    \"accessibility_score\": 92,\n    \"performance_score\": 78\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/improve/check-thresholds",
+              "host": ["{{base_url}}"],
+              "path": ["api", "improve", "check-thresholds"]
+            }
+          }
+        },
+        {
+          "name": "List Thresholds",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/improve/thresholds",
+              "host": ["{{base_url}}"],
+              "path": ["api", "improve", "thresholds"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

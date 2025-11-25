@@ -1,0 +1,167 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Beige / Earthy Theme */
+
+    /* Background: Warm Cream */
+    --background: 40 20% 99%;
+    /* #FCFAF7 */
+    --foreground: 24 10% 10%;
+    /* #1C1917 */
+
+    /* Card: Slightly darker cream or white */
+    --card: 0 0% 100%;
+    --card-foreground: 24 10% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 24 10% 10%;
+
+    /* Primary: Earthy Brown/Terracotta */
+    --primary: 24 9.8% 10%;
+    /* #1C1917 (Using dark for contrast) or a warm brown like #8D6E63 */
+    /* Let's go with a warm charcoal for primary actions to keep it clean, or a specific brand color. 
+       The user asked for "Beige color", usually implying the background. 
+       Let's use a rich warm brown for primary. */
+    --primary: 30 40% 40%;
+    /* #8F6B4E */
+    --primary-foreground: 40 20% 99%;
+    --primary-hover: 30 40% 35%;
+    --primary-light: 30 40% 90%;
+    --primary-subtle: 30 40% 96%;
+
+    /* Secondary: Warm Sand */
+    --secondary: 30 20% 94%;
+    /* #F2EFE9 */
+    --secondary-foreground: 24 10% 10%;
+    --secondary-hover: 30 20% 90%;
+
+    /* Muted: Light Grayish Beige */
+    --muted: 30 10% 94%;
+    --muted-foreground: 24 5% 45%;
+
+    /* Accent: Soft Terracotta */
+    --accent: 30 20% 94%;
+    --accent-foreground: 24 10% 10%;
+    --accent-hover: 30 20% 90%;
+
+    /* Destructive */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    /* Border & Input */
+    --border: 30 10% 85%;
+    /* #E0DBD6 */
+    --input: 30 10% 85%;
+
+    --ring: 30 40% 40%;
+
+    --radius: 0.5rem;
+
+    /* Semantic Colors */
+    --success: 142 76% 36%;
+    /* Green */
+    --success-foreground: 30 20% 98%;
+    --success-background: 142 70% 95%;
+
+    --warning: 38 92% 50%;
+    /* Amber */
+    --warning-foreground: 30 20% 98%;
+    --warning-background: 38 92% 95%;
+
+    --error: 0 84% 60%;
+    /* Red */
+    --error-foreground: 30 20% 98%;
+    --error-background: 0 84% 97%;
+
+    --info: 217 91% 60%;
+    /* Blue */
+    --info-foreground: 30 20% 98%;
+    --info-background: 217 91% 97%;
+  }
+
+  .dark {
+    /* Dark Mode (Warm Dark Gray) */
+    --background: 24 10% 10%;
+    --foreground: 40 20% 99%;
+
+    --card: 24 10% 12%;
+    --card-foreground: 40 20% 99%;
+
+    --popover: 24 10% 12%;
+    --popover-foreground: 40 20% 99%;
+
+    --primary: 40 20% 99%;
+    --primary-foreground: 24 10% 10%;
+
+    --secondary: 24 10% 16%;
+    --secondary-foreground: 40 20% 99%;
+
+    --muted: 24 10% 16%;
+    --muted-foreground: 24 5% 60%;
+
+    --accent: 24 10% 16%;
+    --accent-foreground: 40 20% 99%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 40 20% 99%;
+
+    --border: 24 10% 20%;
+    --input: 24 10% 20%;
+
+    --ring: 30 20% 80%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Typography Defaults */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-semibold tracking-tight text-foreground;
+  }
+
+  h1 {
+    @apply text-4xl;
+  }
+
+  h2 {
+    @apply text-3xl;
+  }
+
+  h3 {
+    @apply text-2xl;
+  }
+
+  h4 {
+    @apply text-xl;
+  }
+
+  /* Scrollbar Styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/20 rounded-full hover:bg-muted-foreground/40 transition-colors;
+  }
+}

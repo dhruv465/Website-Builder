@@ -1,0 +1,135 @@
+{
+  "dashboard": {
+    "title": "Smart Website Builder - Production Dashboard",
+    "tags": ["smart-website-builder", "production"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "title": "API Request Rate",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(http_requests_total[5m])",
+            "legendFormat": "{{method}} {{path}}"
+          }
+        ]
+      },
+      {
+        "title": "API Response Time (p95)",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))",
+            "legendFormat": "p95"
+          }
+        ]
+      },
+      {
+        "title": "Error Rate",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(http_requests_total{status=~\"5..\"}[5m])",
+            "legendFormat": "5xx errors"
+          },
+          {
+            "expr": "rate(http_requests_total{status=~\"4..\"}[5m])",
+            "legendFormat": "4xx errors"
+          }
+        ]
+      },
+      {
+        "title": "Active Workflows",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "workflow_active_count"
+          }
+        ]
+      },
+      {
+        "title": "Celery Queue Depth",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "celery_queue_length",
+            "legendFormat": "{{queue}}"
+          }
+        ]
+      },
+      {
+        "title": "Database Connections",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "database_connections_active",
+            "legendFormat": "Active"
+          },
+          {
+            "expr": "database_connections_idle",
+            "legendFormat": "Idle"
+          }
+        ]
+      },
+      {
+        "title": "Redis Memory Usage",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "redis_memory_used_bytes",
+            "legendFormat": "Used"
+          }
+        ]
+      },
+      {
+        "title": "Pod CPU Usage",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(container_cpu_usage_seconds_total{namespace=\"smart-website-builder\"}[5m])",
+            "legendFormat": "{{pod}}"
+          }
+        ]
+      },
+      {
+        "title": "Pod Memory Usage",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "container_memory_usage_bytes{namespace=\"smart-website-builder\"}",
+            "legendFormat": "{{pod}}"
+          }
+        ]
+      },
+      {
+        "title": "LLM API Calls",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(llm_api_calls_total[5m])",
+            "legendFormat": "{{agent}}"
+          }
+        ]
+      },
+      {
+        "title": "LLM Token Usage",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(llm_tokens_used_total[5m])",
+            "legendFormat": "{{agent}}"
+          }
+        ]
+      },
+      {
+        "title": "Deployment Success Rate",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "rate(deployments_successful_total[1h]) / rate(deployments_total[1h])"
+          }
+        ]
+      }
+    ]
+  }
+}

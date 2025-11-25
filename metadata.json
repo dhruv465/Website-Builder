@@ -1,0 +1,7 @@
+{
+  "name": "Smart Multi-Agent Website Builder",
+  "description": "An AI-powered platform where a team of agents collaboratively creates, audits, and optimizes websites based on user goals. The system guides users through requirement capture, generates code, and runs audits for SEO, accessibility, and speed.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
