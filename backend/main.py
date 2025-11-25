@@ -8,11 +8,19 @@ from contextlib import asynccontextmanager
 
 from utils.config import settings
 from utils.logging import setup_logging, logger
-from api import workflows, requirements, code, audit, deploy, sessions, integrations, improve, websocket, templates
+from api import workflows, requirements, code, audit, deploy, sessions, integrations, improve, websocket, templates, assets, editing, forms, seo, export, billing
 from middleware.security import setup_security_middleware
+from middleware.rate_limit import setup_rate_limiting
+from starlette.middleware.base import BaseHTTPMiddleware
 
 # Setup logging
 setup_logging()
+
+class CSPMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        response = await call_next(request)
+        response.headers["Content-Security-Policy"] = "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' ws: wss: https:;"
+        return response
 
 
 @asynccontextmanager
@@ -45,6 +53,12 @@ app.add_middleware(
 
 # Setup security middleware
 setup_security_middleware(app)
+
+# Add CSP middleware
+app.add_middleware(CSPMiddleware)
+
+# Setup rate limiting
+setup_rate_limiting(app)
 
 
 # Health check endpoint
@@ -80,6 +94,12 @@ app.include_router(deploy.router, prefix="/api/deploy", tags=["Deployment"])
 app.include_router(sessions.router, prefix="/api/sessions", tags=["Sessions"])
 app.include_router(integrations.router, prefix="/api/integrations", tags=["Integrations"])
 app.include_router(templates.router, prefix="/api", tags=["Templates"])
+app.include_router(assets.router, prefix="/api", tags=["Assets"])
+app.include_router(editing.router, prefix="/api/edit", tags=["Editing"])
+app.include_router(forms.router, prefix="/api", tags=["Forms"])
+app.include_router(seo.router, prefix="/api/seo", tags=["SEO"])
+app.include_router(export.router, prefix="/api/export", tags=["Export"])
+app.include_router(billing.router, tags=["Billing"])
 app.include_router(improve.router, tags=["Improvement"])
 app.include_router(websocket.router, tags=["WebSocket"])
 

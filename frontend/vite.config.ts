@@ -61,6 +61,14 @@ export default defineConfig({
           if (id.includes('node_modules/react-window')) {
             return 'virtual-scroll';
           }
+          // Monaco Editor
+          if (id.includes('node_modules/monaco-editor')) {
+            return 'monaco-editor';
+          }
+          // Lucide Icons
+          if (id.includes('node_modules/lucide-react')) {
+            return 'lucide-icons';
+          }
         },
       },
     },

@@ -21,6 +21,7 @@ interface SessionContextValue {
   exportSession: () => string;
   importSession: (data: string) => Promise<void>;
   clearSession: () => void;
+  refreshSession: () => Promise<void>;
 }
 
 const SessionContext = createContext<SessionContextValue | undefined>(undefined);
@@ -77,6 +78,20 @@ export function SessionProvider({ children }: SessionProviderProps) {
       setIsLoading(false);
     }
   }, []);
+
+  /**
+   * Refresh current session data
+   */
+  const refreshSession = useCallback(async () => {
+    if (!session) return;
+    // Don't set loading state for background refresh
+    try {
+      const loadedSession = await getSession(session.id);
+      setSession(loadedSession);
+    } catch (err) {
+      console.error('Failed to refresh session:', err);
+    }
+  }, [session]);
 
   /**
    * Update session data
@@ -205,6 +220,7 @@ export function SessionProvider({ children }: SessionProviderProps) {
     error,
     createNewSession,
     loadSession,
+    refreshSession,
     updateSessionData,
     updatePreferences,
     exportSession,

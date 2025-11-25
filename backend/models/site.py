@@ -50,6 +50,7 @@ class Site(Base):
     audits = relationship("Audit", back_populates="site", cascade="all, delete-orphan")
     deployments = relationship("Deployment", back_populates="site", cascade="all, delete-orphan")
     integrations = relationship("Integration", back_populates="site", cascade="all, delete-orphan")
+    forms = relationship("Form", back_populates="site", cascade="all, delete-orphan")
     
     def __repr__(self):
         return f"<Site(id={self.id}, name={self.name})>"

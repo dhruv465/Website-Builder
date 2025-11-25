@@ -235,6 +235,15 @@ VITE_ENABLE_DEBUG=true
 VITE_ENV=development
 ```
 
+## Testing
+
+We have comprehensive testing for both frontend and backend.
+
+- **Frontend**: Vitest + React Testing Library + Playwright
+- **Backend**: Pytest
+
+For detailed instructions on running tests, please refer to [docs/TESTING.md](docs/TESTING.md).
+
 ## Contributing
 
 We welcome contributions! Please see our [Contributing Guidelines](./CONTRIBUTING.md) for details on:

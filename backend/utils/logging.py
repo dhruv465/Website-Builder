@@ -71,6 +71,26 @@ def setup_logging():
     logging.getLogger("uvicorn").setLevel(logging.WARNING)
     logging.getLogger("fastapi").setLevel(logging.WARNING)
     logging.getLogger("sqlalchemy").setLevel(logging.WARNING)
+    
+    # Initialize Sentry if DSN is configured
+    if hasattr(settings, 'SENTRY_DSN') and settings.SENTRY_DSN:
+        try:
+            import sentry_sdk
+            from sentry_sdk.integrations.fastapi import FastApiIntegration
+            from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
+            
+            sentry_sdk.init(
+                dsn=settings.SENTRY_DSN,
+                environment=settings.ENVIRONMENT,
+                traces_sample_rate=0.1,  # 10% of transactions
+                integrations=[
+                    FastApiIntegration(),
+                    SqlalchemyIntegration(),
+                ],
+            )
+            logger.info("Sentry initialized successfully")
+        except Exception as e:
+            logger.warning(f"Failed to initialize Sentry: {e}")
 
 
 # Create logger instance

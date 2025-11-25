@@ -5,6 +5,7 @@ import { LoadingSpinner } from '../components/ui/loading-spinner';
 
 // Lazy load pages for better performance
 const BuilderPage = lazy(() => import('../pages/BuilderPage'));
+const DashboardPage = lazy(() => import('../pages/DashboardPage'));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -25,6 +26,22 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
+        element: (
+          <LazyPage>
+            <BuilderPage />
+          </LazyPage>
+        ),
+      },
+      {
+        path: 'dashboard',
+        element: (
+          <LazyPage>
+            <DashboardPage />
+          </LazyPage>
+        ),
+      },
+      {
+        path: 'builder/:siteId?',
         element: (
           <LazyPage>
             <BuilderPage />

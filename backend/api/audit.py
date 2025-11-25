@@ -388,3 +388,66 @@ async def get_audit_trends(site_id: str, days: Optional[int] = 30):
             status_code=500,
             detail="Failed to retrieve audit trends"
         )
+
+
+class AutoFixRequest(BaseModel):
+    """Request to auto-fix audit issues."""
+    html_code: str = Field(..., description="HTML code to fix")
+    issues: List[Dict[str, Any]] = Field(..., description="List of issues to fix")
+    site_id: Optional[str] = Field(None, description="Site ID for tracking")
+
+
+class AutoFixResponse(BaseModel):
+    """Response with auto-fixed code."""
+    success: bool
+    fixed_html: str
+    fixes_applied: List[Dict[str, Any]]
+    fixes_count: int
+    message: str
+
+
+@router.post("/auto-fix", response_model=AutoFixResponse)
+async def auto_fix_issues(req: AutoFixRequest):
+    """
+    Automatically fix common audit issues.
+    
+    This endpoint applies automatic fixes to common issues like:
+    - Missing meta tags
+    - Missing alt text
+    - Missing ARIA labels
+    - Heading hierarchy
+    - Form labels
+    - Image lazy loading
+    
+    Args:
+        req: Auto-fix request with HTML code and issues
+        
+    Returns:
+        AutoFixResponse with fixed HTML and list of applied fixes
+    """
+    try:
+        from services.auto_fix_service import auto_fix_service
+        
+        # Apply auto-fixes
+        fixed_html, fixes_applied = auto_fix_service.fix_all(
+            req.html_code,
+            req.issues
+        )
+        
+        logger.info(f"Applied {len(fixes_applied)} auto-fixes")
+        
+        return AutoFixResponse(
+            success=True,
+            fixed_html=fixed_html,
+            fixes_applied=fixes_applied,
+            fixes_count=len(fixes_applied),
+            message=f"Successfully applied {len(fixes_applied)} fixes"
+        )
+        
+    except Exception as e:
+        logger.error(f"Error applying auto-fixes: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to apply auto-fixes: {str(e)}"
+        )
+
