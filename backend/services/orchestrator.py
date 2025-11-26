@@ -673,13 +673,19 @@ class AgentOrchestrator:
         state.add_log("info", "Starting CREATE_SITE workflow")
         
         # 1. Input Processing
+        # 1. Input Processing
         requirements = None
-        if "requirements" in input_data:
+        if "requirements" in input_data and isinstance(input_data["requirements"], dict):
             state.add_log("info", "Using provided requirements")
             requirements = input_data["requirements"]
         else:
             state.add_log("info", "Parsing requirements from input")
             raw_input = input_data.get("prompt") or input_data.get("raw_input")
+            
+            # Also check if requirements is passed as a string (common from frontend)
+            if not raw_input and "requirements" in input_data and isinstance(input_data["requirements"], str):
+                raw_input = input_data["requirements"]
+            
             if not raw_input:
                 raise ValueError("No requirements or input prompt provided")
                 
