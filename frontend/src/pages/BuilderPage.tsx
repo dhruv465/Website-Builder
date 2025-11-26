@@ -5,9 +5,11 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { SitePreview } from '@/components/builder/SitePreview';
 import { DeviceEmulator, Orientation } from '@/components/builder/DeviceEmulator';
 import { PerformanceOverlay } from '@/components/builder/PerformanceOverlay';
-import { NaturalLanguageInput } from '@/components/editor/NaturalLanguageInput';
-import { Undo, Redo, Save, Code, Eye, Home, Sparkles, GripVertical, Maximize2 } from 'lucide-react';
+import { AgentActivity, AgentStep } from '@/components/builder/AgentActivity';
+import { NaturalLanguageInput, AgentStepStatus } from '@/components/editor/NaturalLanguageInput';
+import { Undo, Redo, Save, Code, Eye, Home, Sparkles, GripVertical, Maximize2, Brain } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Lazy load heavy components
 const CodeEditor = lazy(() => import('@/components/builder/CodeEditor').then(module => ({ default: module.CodeEditor })));
@@ -34,6 +36,10 @@ export default function BuilderPage() {
   // Layout state
   const [leftWidth, setLeftWidth] = useState(25); // percentage - 25% left, 75% right
   const [isResizing, setIsResizing] = useState(false);
+
+  // Agent State
+  const [agentSteps, setAgentSteps] = useState<AgentStep[]>([]);
+  const [isAgentActive, setIsAgentActive] = useState(false);
 
   // Initialize history
   useEffect(() => {
@@ -133,6 +139,31 @@ export default function BuilderPage() {
     handleCodeChange(html, css, jsCode);
   };
 
+  const handleAgentProgress = (step: string, status: AgentStepStatus) => {
+    setIsAgentActive(true);
+    
+    setAgentSteps(prev => {
+      // Initialize steps if empty
+      if (prev.length === 0) {
+        return [
+          { id: 'parse', label: 'Analyzing Request', status: 'pending', icon: Brain },
+          { id: 'apply', label: 'Generating Code', status: 'pending', icon: Code },
+        ];
+      }
+
+      return prev.map(s => {
+        if (s.id === step) {
+          return { ...s, status };
+        }
+        return s;
+      });
+    });
+
+    if (step === 'apply' && (status === 'completed' || status === 'failed')) {
+      setTimeout(() => setIsAgentActive(false), 3000);
+    }
+  };
+
   return (
     <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden">
       {/* Top Header - Modern Glass Effect */}
@@ -210,28 +241,49 @@ export default function BuilderPage() {
             </Button>
           </div>
 
-          {/* Info Section - Moved to Top */}
-          <div className="flex-1 p-6 overflow-auto">
-            <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-white/5 border border-white/5">
-                <h3 className="text-sm font-semibold mb-2">💡 Quick Tips</h3>
-                <ul className="text-xs text-muted-foreground space-y-1">
-                  <li>• Use natural language to edit your website</li>
-                  <li>• Switch to Code view to edit manually</li>
-                  <li>• Changes are auto-saved every 30 seconds</li>
-                  <li>• Use Undo/Redo to navigate history</li>
-                </ul>
-              </div>
-              
-              <div className="p-4 rounded-xl bg-primary/5 border border-primary/20">
-                <h3 className="text-sm font-semibold mb-2 text-primary">✨ Example Commands</h3>
-                <ul className="text-xs text-muted-foreground space-y-1">
-                  <li>• "Change the header background to blue"</li>
-                  <li>• "Add a contact form"</li>
-                  <li>• "Make the text larger"</li>
-                  <li>• "Center all content"</li>
-                </ul>
-              </div>
+          {/* Info Section / Agent Activity */}
+          <div className="flex-1 p-6 overflow-auto relative">
+            <div className="absolute inset-0 p-6">
+              <AnimatePresence mode="wait">
+                {isAgentActive ? (
+                  <motion.div
+                    key="agent"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                  >
+                    <AgentActivity steps={agentSteps} isVisible={true} />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="tips"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    className="space-y-4"
+                  >
+                    <div className="p-4 rounded-xl bg-white/5 border border-white/5">
+                      <h3 className="text-sm font-semibold mb-2">💡 Quick Tips</h3>
+                      <ul className="text-xs text-muted-foreground space-y-1">
+                        <li>• Use natural language to edit your website</li>
+                        <li>• Switch to Code view to edit manually</li>
+                        <li>• Changes are auto-saved every 30 seconds</li>
+                        <li>• Use Undo/Redo to navigate history</li>
+                      </ul>
+                    </div>
+                    
+                    <div className="p-4 rounded-xl bg-primary/5 border border-primary/20">
+                      <h3 className="text-sm font-semibold mb-2 text-primary">✨ Example Commands</h3>
+                      <ul className="text-xs text-muted-foreground space-y-1">
+                        <li>• "Change the header background to blue"</li>
+                        <li>• "Add a contact form"</li>
+                        <li>• "Make the text larger"</li>
+                        <li>• "Center all content"</li>
+                      </ul>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
 
@@ -241,6 +293,7 @@ export default function BuilderPage() {
               onApplyEdit={handleApplyEdit}
               htmlCode={htmlCode}
               cssCode={cssCode}
+              onProgress={handleAgentProgress}
             />
           </div>
         </div>

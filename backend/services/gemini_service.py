@@ -15,7 +15,7 @@ class GeminiService:
     def __init__(self):
         """Initialize Gemini service."""
         genai.configure(api_key=settings.GEMINI_API_KEY)
-        self.model = genai.GenerativeModel("gemini-2.0-flash-exp")
+        self.model = genai.GenerativeModel("gemini-1.5-flash")
         logger.info("Gemini service initialized")
     
     async def generate_text(
