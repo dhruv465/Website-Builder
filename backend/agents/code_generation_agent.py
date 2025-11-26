@@ -1466,52 +1466,105 @@ export default {
         # Get design style additions
         style_additions = self.design_style_library.get_style_prompt_addition(design_style)
         
-        prompt = f"""You are an expert web developer. Generate a complete, production-ready HTML website based on the following requirements:
+        prompt = f"""You are an elite web developer and UX designer with 10+ years of experience creating stunning, conversion-optimized websites. You specialize in modern web standards, accessibility, and performance optimization.
 
-**Site Type:** {site_type}
-**Design Style:** {design_style}
-**Color Palette:** {color_palette or "Use a professional color scheme"}
-**Target Audience:** {target_audience or "General audience"}
-**Content Tone:** {content_tone}
+**PROJECT BRIEF:**
+Site Type: {site_type}
+Design Style: {design_style}
+Color Palette: {color_palette or "Use a cohesive, professional color scheme with primary, secondary, and accent colors"}
+Target Audience: {target_audience or "General audience - design for broad appeal"}
+Content Tone: {content_tone}
 
-**Pages to Include:**
-{chr(10).join(f"- {page}" for page in pages) if pages else "- Single page site"}
+**PAGES TO INCLUDE:**
+{chr(10).join(f"- {page}" for page in pages) if pages else "- Single page site with multiple sections"}
 
-**Key Features:**
-{chr(10).join(f"- {feature}" for feature in key_features) if key_features else "- Basic informational content"}
+**KEY FEATURES TO IMPLEMENT:**
+{chr(10).join(f"- {feature}" for feature in key_features) if key_features else "- Basic informational content with strong visual hierarchy"}
 
-**Requirements:**
-1. Generate a SINGLE, complete HTML file with embedded CSS and JavaScript
-2. Use Tailwind CSS via CDN for styling (include the CDN link in the <head>)
-3. Make the site fully responsive with mobile-first design
-4. Include proper semantic HTML5 structure
-5. Add comprehensive SEO meta tags (title, description, viewport, Open Graph)
-6. Use modern, clean design with good UX
-7. Include ARIA labels for accessibility
-8. Add smooth scrolling and subtle animations
-9. Ensure all images have alt text
-10. Use placeholder images from https://images.unsplash.com/ or https://via.placeholder.com/
+**TECHNICAL REQUIREMENTS:**
+1. **Single File Structure**: Generate ONE complete HTML file with embedded CSS and JavaScript
+2. **Styling Framework**: Use Tailwind CSS v3.4+ via CDN (include in <head>)
+3. **Responsive Design**: Mobile-first approach with breakpoints for tablet (md:) and desktop (lg:, xl:)
+4. **HTML5 Semantics**: Use proper semantic tags (header, nav, main, section, article, aside, footer)
+5. **SEO Optimization**: 
+   - Descriptive <title> tag (50-60 characters)
+   - Meta description (150-160 characters)
+   - Viewport meta tag for mobile
+   - Open Graph tags for social sharing
+   - Structured data (JSON-LD) for rich snippets
+6. **Accessibility (WCAG 2.1 AA)**:
+   - ARIA labels on interactive elements
+   - Proper heading hierarchy (h1 → h6)
+   - Alt text on all images
+   - Sufficient color contrast (4.5:1 minimum)
+   - Keyboard navigation support
+   - Focus indicators on interactive elements
+7. **Performance**:
+   - Lazy loading for images (loading="lazy")
+   - Optimized image formats (WebP with fallbacks)
+   - Minimal JavaScript (vanilla JS only, no frameworks)
+   - CSS animations using transform and opacity for GPU acceleration
+8. **Modern UX Patterns**:
+   - Smooth scrolling behavior
+   - Hover states with subtle transitions (duration-200, duration-300)
+   - Loading states for forms
+   - Micro-interactions for better engagement
+   - Sticky navigation on scroll
+   - Scroll-to-top button
+9. **Images**: Use high-quality placeholder images from:
+   - Unsplash: https://images.unsplash.com/photo-[id]?w=[width]&h=[height]&fit=crop
+   - Or placeholder.com: https://via.placeholder.com/[width]x[height]
 
-**Structure Guidelines:**
-- Use semantic HTML5 tags (header, nav, main, section, article, footer)
-- Implement a responsive navigation menu
-- Create visually appealing sections with proper spacing
-- Use Tailwind utility classes for all styling
-- Add hover effects and transitions
-- Include a footer with relevant links
+**DESIGN GUIDELINES:**
+- **Layout**: Use CSS Grid and Flexbox for modern, flexible layouts
+- **Spacing**: Consistent spacing scale (p-4, p-6, p-8, p-12, p-16, p-24)
+- **Typography**: 
+  - Clear hierarchy with varying font sizes (text-sm to text-6xl)
+  - Line height for readability (leading-relaxed, leading-loose)
+  - Font weights for emphasis (font-normal, font-semibold, font-bold)
+- **Colors**: 
+  - Use Tailwind's color palette or custom CSS variables
+  - Implement dark mode with dark: prefix classes
+  - Ensure proper contrast ratios
+- **Components**:
+  - Navigation: Responsive hamburger menu for mobile
+  - Hero Section: Eye-catching with clear CTA
+  - Feature Cards: Grid layout with icons
+  - Testimonials: If applicable to site type
+  - Contact Form: With validation and feedback
+  - Footer: Multi-column with links and social icons
+- **Animations**:
+  - Fade-in on scroll using Intersection Observer
+  - Smooth transitions on hover (transition-all duration-300)
+  - Subtle parallax effects where appropriate
+  - Loading spinners for async actions
 
-**Content Guidelines:**
-- Use realistic placeholder content that matches the site type
-- Write engaging, {content_tone} copy
-- Include clear calls-to-action
-- Add relevant icons (use Unicode symbols or Heroicons via CDN)
-- Implement both dark mode and light mode support
-- Ensure accessibility standards (WCAG) are maintained
+**CONTENT GUIDELINES:**
+- **Realistic Content**: Write actual, engaging copy that matches the {content_tone} tone
+- **Headlines**: Compelling, benefit-driven headlines (not generic placeholders)
+- **CTAs**: Clear, action-oriented calls-to-action ("Get Started Free", "Book a Demo", "Learn More")
+- **Microcopy**: Helpful hints, error messages, success states
+- **Icons**: Use Heroicons (via CDN) or Unicode symbols for visual interest
+- **Social Proof**: Include testimonials, stats, or logos if relevant to site type
+
+**CODE QUALITY STANDARDS:**
+- **Clean Code**: Well-formatted, indented HTML
+- **Comments**: Section headers for major page sections
+- **Naming**: Semantic class names and IDs
+- **Validation**: Ensure valid HTML5 (no unclosed tags, proper nesting)
+- **Cross-browser**: Compatible with modern browsers (Chrome, Firefox, Safari, Edge)
 
 {style_additions}
 
-Generate ONLY the HTML code, no explanations. The code should be ready to deploy immediately.
-"""
+**CRITICAL INSTRUCTIONS:**
+- Generate ONLY the complete HTML code - no explanations, no markdown code blocks, no preamble
+- The code must be production-ready and deployable immediately
+- Every feature listed above must be implemented
+- The website should look professional, modern, and polished
+- Focus on user experience and conversion optimization
+- Make it visually stunning while maintaining fast load times
+
+Begin generating the HTML now:"""
         
         return prompt
     

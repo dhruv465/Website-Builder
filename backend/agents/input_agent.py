@@ -450,33 +450,104 @@ class InputAgent(BaseAgent):
         conversation_history: List[Dict[str, str]]
     ) -> str:
         """Build prompt for parsing requirements."""
-        prompt = """You are an expert at extracting structured website requirements from natural language descriptions.
+        prompt = """You are an elite requirements analyst and technical consultant specializing in web development projects. You have 10+ years of experience translating client needs into precise technical specifications.
 
-Your task is to analyze the user's input and extract the following information:
-- site_type: The type of website (e.g., portfolio, blog, landing page, e-commerce, contact form)
-- pages: List of pages to include (e.g., ["home", "about", "contact"])
-- color_palette: Color scheme or specific colors mentioned
-- key_features: List of features to implement (e.g., ["contact form", "image gallery", "blog posts"])
-- design_style: Design aesthetic from these options:
-  * bold_minimalism: Clean layouts, striking typography, generous white space, subtle accent colors
-  * brutalism: Raw elements, big blocks, bold fonts, authentic presentation
-  * flat_minimalist: Highly functional, emphasizing simplicity and usability
-  * anti_design: Asymmetric layouts, experimental typography, creative imperfections
-  * vibrant_blocks: Big blocks, vivid contrasts, vibrant color palettes
-  * organic_fluid: Organic, fluid, asymmetrical shapes for intuitive navigation
-  * retro_nostalgic: Retro elements, playful geometric shapes, pastel color schemes
-  * experimental: Experimental navigation, non-traditional scrolling, dynamic typography
-  Extract if the user mentions a specific style or aesthetic that matches one of these options.
-- target_audience: Who the site is for
-- content_tone: Tone of the content (e.g., professional, casual, friendly)
-- framework: Preferred frontend framework (vanilla, react, vue, nextjs, svelte). Extract if explicitly mentioned by the user.
-- additional_details: Any other relevant information
+**YOUR ROLE:**
+Extract structured, actionable website requirements from natural language descriptions. Be thorough, intelligent, and context-aware in your analysis.
+
+**INFORMATION TO EXTRACT:**
+
+1. **site_type** (REQUIRED): The primary purpose/category of the website
+   - Examples: portfolio, blog, landing page, e-commerce, SaaS product, corporate website, personal website, agency site, restaurant site, real estate listing, event page, documentation site, community forum, educational platform
+   - Be specific: "portfolio for photographer" vs just "portfolio"
+
+2. **pages** (List): All pages/sections that should be included
+   - Common pages: home, about, services, portfolio, blog, contact, pricing, testimonials, FAQ, team, careers
+   - For single-page sites, list sections: hero, features, about, testimonials, contact
+   - Infer standard pages based on site type if not explicitly mentioned
+
+3. **color_palette** (String): Color scheme preferences
+   - Extract specific colors mentioned (e.g., "blue and white", "dark theme with purple accents")
+   - Note preferences like "professional", "vibrant", "minimal", "dark mode", "pastel"
+   - Infer from industry standards if not specified (e.g., tech = blue/purple, health = green/blue, creative = bold colors)
+
+4. **key_features** (List - REQUIRED): Functional requirements and interactive elements
+   - Examples: contact form, image gallery, blog posts, search functionality, user authentication, shopping cart, booking system, newsletter signup, social media integration, live chat, testimonials slider, video background, parallax scrolling, animations
+   - Be comprehensive - include both explicitly stated and implied features
+   - Prioritize features that enhance user experience
+
+5. **design_style** (Enum): Visual aesthetic from these specific options:
+   - **bold_minimalism**: Clean layouts, striking typography, generous white space, subtle accent colors
+   - **brutalism**: Raw elements, big blocks, bold fonts, authentic presentation
+   - **flat_minimalist**: Highly functional, emphasizing simplicity and usability
+   - **anti_design**: Asymmetric layouts, experimental typography, creative imperfections
+   - **vibrant_blocks**: Big blocks, vivid contrasts, vibrant color palettes
+   - **organic_fluid**: Organic, fluid, asymmetrical shapes for intuitive navigation
+   - **retro_nostalgic**: Retro elements, playful geometric shapes, pastel color schemes
+   - **experimental**: Experimental navigation, non-traditional scrolling, dynamic typography
+   
+   **MATCHING LOGIC:**
+   - "modern" or "clean" → bold_minimalism
+   - "simple" or "minimal" → flat_minimalist
+   - "creative" or "artistic" → anti_design
+   - "colorful" or "vibrant" → vibrant_blocks
+   - "organic" or "natural" → organic_fluid
+   - "vintage" or "retro" → retro_nostalgic
+   - "unique" or "experimental" → experimental
+   - If unclear, choose based on site type and target audience
+
+6. **target_audience** (String): Who will use this website
+   - Demographics: age range, profession, interests
+   - Examples: "young professionals 25-35", "small business owners", "tech enthusiasts", "parents with young children", "luxury consumers"
+   - Infer from site type if not stated (e.g., portfolio → potential clients/employers)
+
+7. **content_tone** (String): Voice and style of written content
+   - Options: professional, casual, friendly, authoritative, playful, inspirational, technical, conversational, formal, witty
+   - Match to target audience and site type
+   - Default to "professional" for business sites, "friendly" for personal sites
+
+8. **framework** (Enum - Optional): Preferred frontend technology
+   - Only extract if EXPLICITLY mentioned by user
+   - Options: vanilla, react, vue, nextjs, svelte
+   - Leave null if not specified - the system will recommend one
+
+9. **additional_details** (Object): Any other relevant information
+   - Brand guidelines, competitor references, specific functionality, integrations needed, content management requirements, hosting preferences, timeline, budget constraints
+
+**EXTRACTION GUIDELINES:**
+
+**Be Intelligent:**
+- Read between the lines - infer reasonable requirements from context
+- If user says "I need a site for my photography business" → infer: portfolio site, image gallery, contact form, about page, services page
+- If user mentions "blog" → infer: blog listing page, individual post pages, categories, search
+- Consider industry standards and best practices
+
+**Be Comprehensive:**
+- Don't just extract what's explicitly stated
+- Add standard features for the site type (e.g., every business site needs a contact form)
+- Include UX best practices (e.g., mobile menu, footer with links, clear CTAs)
+
+**Be Contextual:**
+- Use previous conversation history to build upon earlier requirements
+- Resolve ambiguities using context from the conversation
+- Maintain consistency with previously stated preferences
+
+**Be Specific:**
+- "Modern design" → Translate to specific design_style enum value
+- "Nice colors" → Infer color_palette based on site type and target audience
+- "Contact me" → Add "contact form" to key_features
+
+**QUALITY CHECKS:**
+- Ensure site_type and key_features are always populated (REQUIRED fields)
+- Verify design_style matches one of the enum values exactly
+- Check that pages list is appropriate for the site type
+- Confirm target_audience and content_tone align with each other
 
 """
         
         # Add conversation history if available
         if conversation_history:
-            prompt += "\nPrevious conversation:\n"
+            prompt += "\n**PREVIOUS CONVERSATION:**\n"
             for msg in conversation_history[-5:]:  # Last 5 messages for context
                 role = msg.get("role", "unknown")
                 content = msg.get("content", "")
@@ -484,12 +555,20 @@ Your task is to analyze the user's input and extract the following information:
             prompt += "\n"
         
         prompt += f"""
-Current user input:
+**CURRENT USER INPUT:**
 {raw_input}
 
-Extract as much information as possible from the input. If information is not explicitly mentioned, you can infer reasonable defaults based on the site type, but mark optional fields as null if truly ambiguous.
+**INSTRUCTIONS:**
+1. Analyze the user input carefully, considering context and implications
+2. Extract ALL relevant information into the structured format
+3. Fill in reasonable defaults for optional fields when you can infer them
+4. Be thorough - include both explicit and implicit requirements
+5. Ensure design_style matches EXACTLY one of the enum values
+6. Leave framework as null unless explicitly mentioned
 
-Respond with valid JSON matching the schema provided."""
+**OUTPUT:**
+Respond with valid JSON matching the schema provided. Be comprehensive and intelligent in your extraction.
+"""
         
         return prompt
     
@@ -637,41 +716,137 @@ Respond with a JSON array of questions, for example:
         """
         try:
             # Build prompt for framework recommendation
-            prompt = f"""You are an expert frontend developer who helps choose the right framework for web projects.
+            prompt = f"""You are a senior technical architect and frontend consultant with 15+ years of experience. You specialize in selecting the optimal technology stack for web projects based on requirements, scalability needs, and business constraints.
 
-Analyze the following website requirements and recommend the most appropriate frontend framework:
+**YOUR TASK:**
+Analyze the website requirements below and recommend the SINGLE BEST frontend framework. Your recommendation will directly impact development time, performance, maintainability, and user experience.
 
-Site Type: {requirements.site_type}
-Key Features: {', '.join(requirements.key_features)}
-Pages: {', '.join(requirements.pages) if requirements.pages else 'Not specified'}
-Target Audience: {requirements.target_audience or 'Not specified'}
-Design Style: {requirements.design_style or 'Not specified'}
+**PROJECT REQUIREMENTS:**
+- **Site Type**: {requirements.site_type}
+- **Key Features**: {', '.join(requirements.key_features)}
+- **Pages**: {', '.join(requirements.pages) if requirements.pages else 'Not specified'}
+- **Target Audience**: {requirements.target_audience or 'Not specified'}
+- **Design Style**: {requirements.design_style or 'Not specified'}
 
-Available frameworks:
-1. vanilla - Plain HTML/CSS/JavaScript (best for simple static sites, landing pages, minimal interactivity)
-2. react - React library (best for complex interactive UIs, SPAs, large applications, component reusability)
-3. vue - Vue.js framework (best for progressive enhancement, moderate complexity, easy learning curve)
-4. nextjs - Next.js framework (best for SEO-critical sites, server-side rendering, static generation, blogs, e-commerce)
-5. svelte - Svelte framework (best for performance-critical apps, smaller bundle sizes, reactive programming)
+**AVAILABLE FRAMEWORKS:**
 
-Consider these factors:
-- Site complexity: Simple sites work well with vanilla, complex apps need React/Vue/Svelte
-- SEO requirements: Blogs, marketing sites, e-commerce benefit from Next.js SSR/SSG
-- Interactivity: High interactivity needs React/Vue/Svelte
-- Performance: Svelte and vanilla offer smallest bundle sizes
-- Development speed: Vue and Next.js offer good developer experience
-- Scalability: React and Next.js scale well for large applications
+1. **vanilla** - Plain HTML/CSS/JavaScript
+   - **Best For**: Simple static sites, landing pages, minimal interactivity, portfolio sites, informational pages
+   - **Pros**: Fastest load time, no build step, easy deployment, SEO-friendly, minimal complexity
+   - **Cons**: Limited scalability, manual DOM manipulation, harder to maintain complex state
+   - **Ideal Complexity**: 1-5 pages, <10 interactive features
+   - **Examples**: Personal portfolio, restaurant menu, event landing page, simple contact form
 
-Recommend ONE framework that best fits these requirements. Provide a clear explanation of why this framework is the best choice.
+2. **react** - React Library (with Vite)
+   - **Best For**: Complex interactive UIs, SPAs, dashboards, applications with heavy state management
+   - **Pros**: Component reusability, massive ecosystem, excellent for complex UIs, great developer tools
+   - **Cons**: Client-side rendering (poor initial SEO), larger bundle size, steeper learning curve
+   - **Ideal Complexity**: 5+ pages, 10+ interactive features, real-time updates, complex forms
+   - **Examples**: Admin dashboard, SaaS application, social media platform, interactive tools
 
-Respond with JSON in this format:
+3. **vue** - Vue.js Framework (with Vite)
+   - **Best For**: Progressive enhancement, moderate complexity, rapid prototyping, balanced projects
+   - **Pros**: Easy learning curve, flexible architecture, good documentation, reactive data binding
+   - **Cons**: Smaller ecosystem than React, less corporate backing
+   - **Ideal Complexity**: 3-10 pages, 5-15 interactive features, moderate state management
+   - **Examples**: Business website with forms, product catalog, member portal, booking system
+
+4. **nextjs** - Next.js Framework (React-based with SSR/SSG)
+   - **Best For**: SEO-critical sites, blogs, e-commerce, marketing sites, content-heavy applications
+   - **Pros**: Server-side rendering, static generation, excellent SEO, image optimization, API routes
+   - **Cons**: More complex setup, requires Node.js server (or Vercel), overkill for simple sites
+   - **Ideal Complexity**: Any size, especially content-driven sites needing SEO
+   - **Examples**: Blog, e-commerce store, corporate website, documentation site, news portal
+
+5. **svelte** - Svelte Framework
+   - **Best For**: Performance-critical apps, smaller bundle sizes, reactive programming, modern UX
+   - **Pros**: Smallest bundle size, true reactivity, no virtual DOM, excellent performance
+   - **Cons**: Smaller ecosystem, fewer resources, less mature tooling
+   - **Ideal Complexity**: 3-10 pages, performance-sensitive applications
+   - **Examples**: Interactive visualizations, performance-critical web apps, modern landing pages
+
+**DECISION CRITERIA:**
+
+**1. SEO Requirements (Weight: HIGH)**
+- Does the site need to rank in search engines?
+- Is it content-driven (blog, marketing, e-commerce)?
+- **If YES → Strongly favor Next.js**
+- **If NO → Consider React, Vue, Svelte, or Vanilla**
+
+**2. Site Complexity (Weight: HIGH)**
+- How many interactive features are required?
+- How complex is the state management?
+- **Simple (1-3 features) → Vanilla**
+- **Moderate (4-10 features) → Vue or Svelte**
+- **Complex (10+ features) → React or Next.js**
+
+**3. Interactivity Level (Weight: MEDIUM)**
+- How much user interaction is expected?
+- Are there real-time updates, complex forms, or dynamic content?
+- **Low → Vanilla or Next.js (SSG)**
+- **Medium → Vue or Svelte**
+- **High → React or Next.js**
+
+**4. Performance Requirements (Weight: MEDIUM)**
+- Is page load speed critical?
+- Is the target audience on slow connections?
+- **Critical → Svelte or Vanilla**
+- **Important → Next.js (SSG) or Vue**
+- **Standard → React**
+
+**5. Development Speed (Weight: LOW)**
+- How quickly does this need to be built?
+- **Fast → Vanilla or Vue**
+- **Moderate → React or Svelte**
+- **Can take time → Next.js**
+
+**6. Scalability (Weight: MEDIUM)**
+- Will this grow significantly in the future?
+- Will there be many developers working on it?
+- **High scalability → React or Next.js**
+- **Moderate → Vue**
+- **Low → Vanilla or Svelte**
+
+**RECOMMENDATION FRAMEWORK:**
+
+**Analyze the requirements using this logic:**
+
+1. **Check for SEO-critical keywords** in site_type:
+   - "blog", "marketing", "ecommerce", "e-commerce", "corporate", "news", "magazine" → **Next.js** (confidence: 0.85+)
+
+2. **Count interactive features**:
+   - 0-3 features AND simple site_type → **Vanilla** (confidence: 0.80+)
+   - 10+ features OR "dashboard", "admin", "app" in site_type → **React** (confidence: 0.85+)
+
+3. **Check for performance keywords**:
+   - "fast", "performance", "lightweight" in requirements → **Svelte** (confidence: 0.75+)
+
+4. **Default to balanced choice**:
+   - Moderate complexity, no strong signals → **Vue** (confidence: 0.70)
+
+**OUTPUT FORMAT:**
+Provide your recommendation as JSON:
 {{
     "framework": "vanilla|react|vue|nextjs|svelte",
-    "explanation": "Detailed explanation of why this framework is recommended",
-    "confidence": 0.85
+    "explanation": "2-3 sentence explanation covering: (1) Why this framework fits the requirements, (2) What specific features/characteristics make it ideal, (3) What trade-offs were considered",
+    "confidence": 0.75
 }}
 
-The confidence should be between 0 and 1, where 1 means you're very confident this is the best choice."""
+**CONFIDENCE SCORING:**
+- **0.90-1.00**: Perfect fit, clear choice, no better alternative
+- **0.75-0.89**: Strong fit, minor trade-offs, recommended choice
+- **0.60-0.74**: Reasonable fit, notable trade-offs, acceptable choice
+- **0.50-0.59**: Marginal fit, significant trade-offs, consider alternatives
+
+**CRITICAL INSTRUCTIONS:**
+- Choose ONLY ONE framework
+- Be decisive - don't hedge or suggest multiple options
+- Provide specific, actionable reasoning
+- Consider the user's actual needs, not theoretical best practices
+- Prioritize simplicity when in doubt (prefer Vanilla or Vue over complex frameworks)
+- Your recommendation will be implemented immediately - make it count
+
+**Begin your analysis now:**"""
 
             # Call Gemini for recommendation
             logger.info(f"Generating framework recommendation for site type: {requirements.site_type}")
