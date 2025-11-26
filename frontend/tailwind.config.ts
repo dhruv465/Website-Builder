@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss'
+import animate from 'tailwindcss-animate'
 
 export default {
   darkMode: ['class'],
@@ -16,22 +17,18 @@ export default {
     },
     extend: {
       colors: {
-        border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
+        border: 'hsl(var(--border) / 0.04)',
+        input: 'hsl(var(--input) / 0.04)',
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
-          hover: 'hsl(var(--primary-hover))',
-          light: 'hsl(var(--primary-light))',
-          subtle: 'hsl(var(--primary-subtle))',
         },
         secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
+          DEFAULT: 'hsl(var(--secondary) / 0.04)',
           foreground: 'hsl(var(--secondary-foreground))',
-          hover: 'hsl(var(--secondary-hover))',
         },
         destructive: {
           DEFAULT: 'hsl(var(--destructive))',
@@ -44,7 +41,6 @@ export default {
         accent: {
           DEFAULT: 'hsl(var(--accent))',
           foreground: 'hsl(var(--accent-foreground))',
-          hover: 'hsl(var(--accent-hover))',
         },
         popover: {
           DEFAULT: 'hsl(var(--popover))',
@@ -54,58 +50,30 @@ export default {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
-        success: {
-          DEFAULT: 'hsl(var(--success))',
-          foreground: 'hsl(var(--success-foreground))',
-          background: 'hsl(var(--success-background))',
-        },
-        warning: {
-          DEFAULT: 'hsl(var(--warning))',
-          foreground: 'hsl(var(--warning-foreground))',
-          background: 'hsl(var(--warning-background))',
-        },
-        error: {
-          DEFAULT: 'hsl(var(--error))',
-          foreground: 'hsl(var(--error-foreground))',
-          background: 'hsl(var(--error-background))',
-        },
-        info: {
-          DEFAULT: 'hsl(var(--info))',
-          foreground: 'hsl(var(--info-foreground))',
-          background: 'hsl(var(--info-background))',
-        },
       },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
+        pill: '9999px',
+        card: '20px',
       },
       fontFamily: {
-        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
-        mono: ['Fira Code', 'Courier New', 'monospace'],
+        sans: ['Inter', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        serif: ['Playfair Display', 'serif'],
       },
-      spacing: {
-        '0': '0px',
-        '1': '4px',
-        '2': '8px',
-        '3': '12px',
-        '4': '16px',
-        '5': '20px',
-        '6': '24px',
-        '8': '32px',
-        '10': '40px',
-        '12': '48px',
-        '16': '64px',
-        '20': '80px',
-        '24': '96px',
+      fontSize: {
+        'hero': ['5.5rem', { lineHeight: '1.05' }],
+        'display-lg': ['4rem', { lineHeight: '1.4' }],
+        'display-md': ['2.5rem', { lineHeight: '1.4' }],
       },
-      zIndex: {
-        'overlay': '800',
-        'fab': '900',
-        'header': '1000',
-        'modal': '1100',
-        'tooltip': '1200',
-        'notification': '1300',
+      backgroundImage: {
+        'hero-gradient': 'linear-gradient(180deg, var(--accent-purple-start) 0%, var(--accent-purple-end) 60%)',
+        'panel-accent': 'linear-gradient(180deg, rgba(111,43,220,0.18), rgba(231,91,177,0.06))',
+      },
+      boxShadow: {
+        'glass': 'inset 0 1px 0 rgba(255,255,255,0.02), 0 20px 40px rgba(0,0,0,0.7)',
+        'outer-glow': '0 8px 40px rgba(111,43,220,0.12)',
       },
       keyframes: {
         'accordion-down': {
@@ -116,28 +84,22 @@ export default {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: '0' },
         },
-        'slide-in-right': {
-          from: { transform: 'translateX(100%)' },
-          to: { transform: 'translateX(0)' },
+        'float': {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
         },
-        'slide-out-right': {
-          from: { transform: 'translateX(0)' },
-          to: { transform: 'translateX(100%)' },
-        },
+        'pulse-glow': {
+          '0%, 100%': { opacity: '0.5' },
+          '50%': { opacity: '1' },
+        }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-        'slide-in-right': 'slide-in-right 0.3s ease-out',
-        'slide-out-right': 'slide-out-right 0.3s ease-in',
-      },
-      boxShadow: {
-        'sm': '0 1px 2px rgba(0,0,0,0.05)',
-        'md': '0 4px 6px -1px rgba(0,0,0,0.1)',
-        'lg': '0 10px 15px -3px rgba(0,0,0,0.1)',
-        'xl': '0 20px 25px -5px rgba(0,0,0,0.1)',
+        'float': 'float 6s ease-in-out infinite',
+        'pulse-glow': 'pulse-glow 3s ease-in-out infinite',
       },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [animate],
 } satisfies Config

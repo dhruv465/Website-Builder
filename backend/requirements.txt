@@ -8,6 +8,7 @@ slowapi==0.1.9
 # Pydantic for data validation
 pydantic==2.10.5
 pydantic-settings==2.7.1
+email-validator>=2.1.0
 
 # Database
 sqlalchemy==2.0.36
@@ -34,7 +35,7 @@ html5lib==1.1
 lxml==5.1.0
 
 # Image Processing
-Pillow==10.2.0
+Pillow>=10.2.0
 
 # Utilities
 python-dotenv==1.0.0

@@ -235,6 +235,7 @@ class MemoryAgent(BaseAgent):
                 "preferences": session.preferences,
                 "created_at": session.created_at.isoformat(),
                 "last_accessed_at": session.last_accessed_at.isoformat(),
+                "sites": [],
             }
             self.redis.set_session(str(session.id), session_data)
             
@@ -288,6 +289,7 @@ class MemoryAgent(BaseAgent):
                 "preferences": session.preferences,
                 "created_at": session.created_at.isoformat(),
                 "last_accessed_at": session.last_accessed_at.isoformat(),
+                "sites": [],
             }
             self.redis.set_session(str(session.id), session_data)
             

@@ -4,6 +4,7 @@ import RootLayout from '../layouts/RootLayout';
 import { LoadingSpinner } from '../components/ui/loading-spinner';
 
 // Lazy load pages for better performance
+const HomePage = lazy(() => import('../pages/HomePage'));
 const BuilderPage = lazy(() => import('../pages/BuilderPage'));
 const DashboardPage = lazy(() => import('../pages/DashboardPage'));
 
@@ -28,6 +29,14 @@ export const router = createBrowserRouter([
         index: true,
         element: (
           <LazyPage>
+            <HomePage />
+          </LazyPage>
+        ),
+      },
+      {
+        path: 'builder/:siteId?',
+        element: (
+          <LazyPage>
             <BuilderPage />
           </LazyPage>
         ),
@@ -41,18 +50,9 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: 'builder/:siteId?',
-        element: (
-          <LazyPage>
-            <BuilderPage />
-          </LazyPage>
-        ),
-      },
-      {
         path: '*',
         element: <Navigate to="/" replace />,
       },
     ],
   },
 ]);
-

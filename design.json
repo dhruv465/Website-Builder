@@ -1,0 +1,272 @@
+{
+  "meta": {
+    "name": "Kodu-inspired Dark UI Design System",
+    "version": "1.0.1",
+    "description": "High-level, creative-director style design tokens and component guidelines to reproduce the visual language from the provided screenshots (dark, neon purple gradient, glass/neumorphic cards, large expressive typography).",
+    "source_images": [
+      "/mnt/data/Screenshot 2025-11-25 at 4.51.28 PM.png",
+      "/mnt/data/Screenshot 2025-11-25 at 4.52.03 PM.png",
+      "/mnt/data/Screenshot 2025-11-25 at 4.52.15 PM.png",
+      "/mnt/data/Screenshot 2025-11-25 at 4.52.34 PM.png",
+      "/mnt/data/Screenshot 2025-11-25 at 4.58.00 PM.png",
+      "/mnt/data/Screenshot 2025-11-25 at 4.58.13 PM.png"
+    ],
+    "author_role": "Creative Director (guideline for AI replication)",
+    "created_at": "2025-11-25"
+  },
+
+  "tokens": {
+    "colors": {
+      "background": "#040404",
+      "panel": "rgba(18,18,18,0.7)",
+      "muted": "#8a8a8a",
+      "text": "#eaeaea",
+      "accent_purple_start": "#6f2bdc",
+      "accent_purple_end": "#e75bb1",
+      "glow_neon": "rgba(147,70,255,0.45)",
+      "glass_stroke": "rgba(255,255,255,0.04)",
+      "card_inner_glow": "rgba(255,255,255,0.02)",
+      "success": "#6fe7b4",
+      "warning": "#ffc46b"
+    },
+
+    "typography": {
+      "brand_serif": "'Playfair Display', serif",
+      "ui_sans": "'Inter', 'Helvetica Neue', Arial, sans-serif",
+      "font_weights": {
+        "display_light": 300,
+        "display_regular": 400,
+        "ui_regular": 400,
+        "ui_medium": 500,
+        "ui_bold": 700
+      },
+      "sizes": {
+        "xs": "0.75rem",
+        "sm": "0.875rem",
+        "base": "1rem",
+        "lg": "1.125rem",
+        "xl": "1.5rem",
+        "display_md": "2.5rem",
+        "display_lg": "4rem",
+        "hero": "5.5rem"
+      },
+      "line_heights": {
+        "tight": 1.05,
+        "normal": 1.4,
+        "loose": 1.6
+      },
+      "letter_spacings": {
+        "normal": "0px",
+        "wide": "0.4px"
+      }
+    },
+
+    "spacing": {
+      "scale": [4, 8, 12, 16, 24, 32, 48, 64, 96],
+      "unit": "px",
+      "rules": "use spacing tokens from the scale for margins, paddings, and gaps. prefer multiples of 8 for primary layout rhythm"
+    },
+
+    "radii": {
+      "small": "8px",
+      "card": "20px",
+      "pill": "9999px",
+      "large": "28px"
+    },
+
+    "elevation": {
+      "shadow_soft": "0 6px 30px rgba(0,0,0,0.6)",
+      "shadow_glass": "inset 0 1px 0 rgba(255,255,255,0.02), 0 20px 40px rgba(0,0,0,0.7)",
+      "outer_glow": "0 8px 40px rgba(111,43,220,0.12)"
+    },
+
+    "gradients": {
+      "hero": "linear-gradient(180deg, #6f2bdc 0%, #e75bb1 60%)",
+      "panel_accent": "linear-gradient(180deg, rgba(111,43,220,0.18), rgba(231,91,177,0.06))"
+    }
+  },
+
+  "accessibility": {
+    "contrast": {
+      "body_text_minimum_ratio": "7:1",
+      "large_display_minimum_ratio": "4.5:1"
+    },
+    "motion": "Respect user prefers-reduced-motion; use subtle, short animations (duration <= 300ms) for hover/focus only",
+    "focus": "always provide visible focus states: 3px solid ring using a desaturated accent or outline of white at 16%"
+  },
+
+  "layout": {
+    "grid": {
+      "container_widths": {
+        "sm": 680,
+        "md": 1024,
+        "lg": 1280,
+        "xl": 1440
+      },
+      "columns": 12,
+      "gutter": 24
+    },
+    "breakpoints": {
+      "mobile": 480,
+      "tablet": 768,
+      "desktop": 1024,
+      "wide": 1440
+    },
+    "rules": [
+      "Hero sections use large vertical padding (scale[6]..scale[8]) and center-aligned content",
+      "Left-aligned headline + right visual compositional split is primary desktop layout",
+      "Cards in pricing or features use equal heights across row, stack vertically on mobile"
+    ]
+  },
+
+  "components": {
+    "typography": {
+      "hero_heading": {
+        "font_family": "brand_serif",
+        "weight": "display_light",
+        "size": "hero",
+        "line_height": "tight",
+        "usage": "Large expressive headline. use italic variant for single-word emphasis, combine with sans-serif subtitle"
+      },
+      "h1": {"font_family": "ui_sans", "weight": "display_regular", "size": "display_lg", "line_height": "normal"},
+      "body": {"font_family": "ui_sans", "weight": "ui_regular", "size": "base", "line_height": "normal"},
+      "muted": {"size": "sm", "color": "colors.muted"}
+    },
+
+    "button": {
+      "primary": {
+        "appearance": "rounded-pill",
+        "padding": "16px 36px",
+        "background": "tokens.gradients.hero",
+        "text_color": "#ffffff",
+        "font_weight": "ui_medium",
+        "shadow": "elevation.outer_glow",
+        "interaction": {
+          "hover": "slightly raise (translateY(-2px)) and increase glow opacity",
+          "active": "translateY(0) reduce glow",
+          "focus": "3px ring"
+        },
+        "usage": "Primary calls to action in hero and pricing"
+      },
+      "secondary": {
+        "appearance": "filled-dark",
+        "background": "rgba(255,255,255,0.04)",
+        "border": "1px solid rgba(255,255,255,0.04)",
+        "text_color": "colors.text"
+      }
+    },
+
+    "input": {
+      "chat_prompt": {
+        "style": "glass",
+        "height": 96,
+        "padding": "20px",
+        "background": "linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.25))",
+        "backdrop_filter": "blur(10px)",
+        "border_radius": "card",
+        "border": "1px solid tokens.colors.glass_stroke",
+        "placeholder_color": "rgba(255,255,255,0.28)",
+        "hint": "Use large, airy input with drop-in send control on right. Include subtle inset glow and inner shadow to create depth"
+      },
+      "form_field": {
+        "height": 48,
+        "border_radius": "small",
+        "background": "rgba(12,12,12,0.6)",
+        "border": "1px solid rgba(255,255,255,0.03)"
+      }
+    },
+
+    "card": {
+      "default": {
+        "background": "rgba(8,8,8,0.6)",
+        "border_radius": "card",
+        "padding": "24px",
+        "shadow": "shadow_glass",
+        "stroke": "glass_stroke",
+        "inner_glow": "card_inner_glow",
+        "usage": "Use for feature tiles, pricing, and content blocks. Keep content minimal and center hierarchy: title, subtitle, content."
+      },
+      "accent": {
+        "border": "2px solid transparent",
+        "accent_edge": "use a thin gradient border on hover: linear-gradient(90deg, #6f2bdc, #e75bb1) clipped to border",
+        "glow": "outer_glow"
+      }
+    },
+
+    "pricing_card": {
+      "structure": ["label (small)", "price (large)", "cta (prominent)", "feature list (bulleted)", "badge (optional)"],
+      "visual": "center column, strong price contrast. highlighted plan uses full purple gradient background with white text and stronger glow; others are dark glass with lighter strokes",
+      "badge": {"shape": "pill", "background": "#6931bd", "text_color": "#fff", "padding": "6px 10px"}
+    },
+
+    "accordion": {
+      "default": {
+        "appearance": "rounded-pill",
+        "background": "rgba(255,255,255,0.02)",
+        "padding": "18px 24px",
+        "icon_alignment": "right",
+        "interaction": "expand/collapse with short fade+slide. expanded area uses same glass card treatment",
+        "usage": "FAQ and details sections"
+      }
+    },
+
+    "nav": {
+      "primary": {
+        "layout": "left logo, center links, right actions",
+        "background": "transparent over hero; switch to subtle solid on scroll",
+        "link_style": "uppercase small caps, letter-spaced, muted color",
+        "cta": "Start for Free uses primary button style"
+      }
+    },
+
+    "badge": {"pill": {"padding": "6px 10px", "radius": "pill", "background": "rgba(255,255,255,0.06)", "text_color": "#fff"}},
+
+    "footer": {
+      "layout": "multi-column small links",
+      "background": "#0b0b0b",
+      "text_style": "muted small",
+      "spacing": "use scale[5..7] for vertical padding"
+    }
+  },
+
+  "visual_language": {
+    "mood": "luxurious, mysterious, futuristic",
+    "metaphors": ["studio darkroom", "stage lighting", "glass showcase"],
+    "principles": [
+      "Contrast-first: use a very dark canvas and bright, high-saturation accents sparingly for emphasis.",
+      "Depth through layers: combine backdrop-blur glass panels, soft inner shadows, and colored outer glows to create a sense of content floating over space.",
+      "Hierarchy by scale: headlines are dramatically oversized; supporting copy is calm and narrow to create focus.",
+      "Material consistency: every interactive surface shares the same glass + inner-shadow treatment so the system feels cohesive.",
+      "Subtle motion: micro-interactions should be short and purposeful; avoid flashy animation."
+    ]
+  },
+
+  "patterns": {
+    "hero_split": "Left: large expressive headline and subcopy. Right: illustrative orb / graphic with curly braces and soft glow. Use negative space heavily.",
+    "card_grid": "3-up cards on desktop with equal heights and a strong center accent for the featured card.",
+    "cta_cluster": "Primary gradient CTA plus a secondary subtle CTA (watch demo) side-by-side in hero.",
+    "faq_list": "Stacked pill accordions with consistent gap and a light focal glow on hover/expand."
+  },
+
+  "implementation_notes": {
+    "css_variables_example": {
+      "--bg": "#040404",
+      "--panel": "rgba(18,18,18,0.7)",
+      "--accent-start": "#6f2bdc",
+      "--accent-end": "#e75bb1",
+      "--glass-stroke": "rgba(255,255,255,0.04)",
+      "--card-radius": "20px"
+    },
+    "recommended_techniques": [
+      "Use backdrop-filter: blur() with a translucent background to reproduce frosted-glass panels.",
+      "Create gradient borders with masked backgrounds and a thin transparent border to preserve inner glow.",
+      "Simulate inner glow with inset box-shadows and a hairline outer shadow for separation.",
+      "Use :focus-visible for accessible focus outlines, not outline:none.",
+      "Compress hero typography responsively — scale down headline on smaller screens while preserving italic emphasis."
+    ],
+    "assets": {
+      "illustration_orb": "Prefer vector + soft radial blur; keep white glyph in center; add two mirrored brace shapes in darkened translucent stroke",
+      "grain_overlay": "A subtle fine-grain noise layer on top of gradients helps sell the textured purple-to-pink backdrop"
+    }
+  }
+}

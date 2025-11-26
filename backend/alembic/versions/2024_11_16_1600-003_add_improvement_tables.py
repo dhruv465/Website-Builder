@@ -28,8 +28,8 @@ def upgrade() -> None:
         sa.Column('performance_min_score', sa.Integer(), nullable=False, server_default='75'),
         sa.Column('overall_min_score', sa.Integer(), nullable=False, server_default='75'),
         sa.Column('enabled', sa.Boolean(), nullable=False, server_default='true'),
-        sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()')),
-        sa.Column('updated_at', sa.DateTime(timezone=True), onupdate=sa.text('now()')),
+        sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP')),
+        sa.Column('updated_at', sa.DateTime(timezone=True), onupdate=sa.text('CURRENT_TIMESTAMP')),
         sa.PrimaryKeyConstraint('id'),
         sa.UniqueConstraint('name')
     )
@@ -50,11 +50,11 @@ def upgrade() -> None:
         sa.Column('final_accessibility_score', sa.Integer(), nullable=True),
         sa.Column('final_performance_score', sa.Integer(), nullable=True),
         sa.Column('final_overall_score', sa.Integer(), nullable=True),
-        sa.Column('issues_addressed', postgresql.JSON(astext_type=sa.Text()), nullable=True),
+        sa.Column('issues_addressed', sa.JSON(), nullable=True),
         sa.Column('improvement_instructions', sa.String(), nullable=True),
         sa.Column('success', sa.Integer(), nullable=True),
         sa.Column('error_message', sa.String(), nullable=True),
-        sa.Column('started_at', sa.DateTime(timezone=True), server_default=sa.text('now()')),
+        sa.Column('started_at', sa.DateTime(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP')),
         sa.Column('completed_at', sa.DateTime(timezone=True), nullable=True),
         sa.Column('duration_seconds', sa.Integer(), nullable=True),
         sa.PrimaryKeyConstraint('id')

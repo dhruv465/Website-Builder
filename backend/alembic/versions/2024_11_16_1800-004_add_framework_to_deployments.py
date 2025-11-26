@@ -25,13 +25,15 @@ def upgrade() -> None:
     )
     
     # Add build_config column (JSON)
+    # Add build_config column (JSON)
     op.add_column(
         'deployments',
-        sa.Column('build_config', postgresql.JSON, nullable=True)
+        sa.Column('build_config', sa.JSON, nullable=True)
     )
     
     # Remove server default after adding column
-    op.alter_column('deployments', 'framework', server_default=None)
+    with op.batch_alter_table('deployments') as batch_op:
+        batch_op.alter_column('framework', server_default=None)
 
 
 def downgrade() -> None:

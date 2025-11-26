@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { WebsiteBuilderInterface } from '@/components/builder/WebsiteBuilderInterface';
+import { useWorkflow } from '@/lib/context/WorkflowContext';
 import { toast } from 'sonner';
 
 interface Page {
@@ -18,7 +19,19 @@ interface Page {
 
 export function WebsiteBuilderPage() {
   const navigate = useNavigate();
+  const { workflowState } = useWorkflow();
   const [isPublishing, setIsPublishing] = useState(false);
+
+  useEffect(() => {
+    if (workflowState) {
+      console.log('Workflow State Update:', workflowState);
+      if (workflowState.status === 'completed') {
+        toast.success('Website generation completed!');
+      } else if (workflowState.status === 'failed') {
+        toast.error('Website generation failed.');
+      }
+    }
+  }, [workflowState]);
 
   const handleSave = async (pages: Page[]) => {
     // Simulate API call
